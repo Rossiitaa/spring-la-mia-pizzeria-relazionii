@@ -10,6 +10,7 @@
 	<div class="container d-flex justify-content-center">
 		<div class="row">
 			<div class="col">
+				
 				<img class="card">
 				<h3 th:text="${pizza.getName()}"></h3>
 				<div th:text="${pizza.getDescription()}"></div>
@@ -23,6 +24,14 @@
 					<a class="btn btn-primary " th:href="@{|/offerte/create?pizzaId=${pizza.id}|}">
 						Crea nuova offerta speciale</a>
 				</p>
+				
+				<h3>Ingredienti:</h3>
+				<ul>
+					<li th:each="ing : ${pizza.ingredienti}" th:text="${ing.name}">
+
+					</li>
+				</ul>
+				
 			</div>
 		</div>
 	</div>

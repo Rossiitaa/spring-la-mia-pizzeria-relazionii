@@ -17,6 +17,9 @@
 		<a class="btn btn-primary m-3" th:href="@{/create}"
 			th:classAppend="${pagina=='create'}? active : not-active">Crea la tua pizza
 		</a>
+		<a th:href="@{/ingredienti}">
+			Ingredienti
+		</a>
 	</div>
 	<div>
 		<ul>
@@ -26,7 +29,7 @@
 				<div>Descrizione pizza: <span th:text="${pizza.description}"></span></div>
 				<div>Prezzo: <span th:text="${pizza.price}"></span> €</div>
 				</a>
-				
+
 				<a class="btn btn-warning my-2" th:href="@{'/edit/{id}'(id=${pizza.id})}"> Modifica</a>
 				<form action="#" th:action="@{'/delete/{id}'(id=${pizza.id})}" method="post">
 					<button class="mb-3 btn btn-danger" type="submit" id="submitButton">

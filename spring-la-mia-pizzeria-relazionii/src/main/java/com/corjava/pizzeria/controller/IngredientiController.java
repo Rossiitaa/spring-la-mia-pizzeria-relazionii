@@ -15,84 +15,72 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.corjava.pizzeria.model.Ingredienti;
-import com.corjava.pizzeria.model.Pizza;
 import com.corjava.pizzeria.repository.IngredientiRepo;
 import com.corjava.pizzeria.repository.PizzaRepo;
 
 import jakarta.validation.Valid;
 
+
+
 @Controller
-@RequestMapping("/")
-public class PizzaController {
+@RequestMapping("/ingredienti")
+public class IngredientiController {
+
 	@Autowired
-	PizzaRepo pizzaRepo;
-	
+	private PizzaRepo pizzaRepo;
+
 	@Autowired
 	private IngredientiRepo ingredientiRepo;
 
 	@GetMapping
-	public String index(@RequestParam(name = "keyword", required = false) String keyword, Model model) {
-		List<Pizza> elencoPizze;
-		if (keyword == null) {
-			elencoPizze = pizzaRepo.findAll();
+	public String index(@RequestParam(name = "nome", required = false) String nome, Model model) {
+		List<Ingredienti> ing;
+		if (nome != null && !nome.isEmpty()) {
+			ing = ingredientiRepo.findByNomeLike("%" + nome + "%");
 		} else {
-			elencoPizze = pizzaRepo.findByNameLike("%" + keyword + "%");
+			ing=ingredientiRepo.findAll(Sort.by("nome"));
 		}
-
-		model.addAttribute("pizze", elencoPizze);
-		return "index";
-	}
-
-	@GetMapping("/details/{id}")
-	public String details(@PathVariable("id") Integer id, Model model) {
-		Pizza pizza = pizzaRepo.getReferenceById(id);
-		model.addAttribute("pizza", pizza);
-		return "details";
+		model.addAttribute("ingrediente", ing);
+		return "ingredienti";
 	}
 
 	@GetMapping("/create")
 	public String create(Model model) {
-		Pizza pizza = new Pizza();
-		List<Ingredienti> ingredienti = ingredientiRepo.findAll(Sort.by("name"));
+		Ingredienti ingredienti = new Ingredienti();
+
 		model.addAttribute("ingredienti", ingredienti);
-		model.addAttribute("pizza", pizza);
-		return "create";
+
+		return "ingredienti-create";
 	}
 
 	@PostMapping("/create")
-	public String store(@Valid @ModelAttribute("pizza") Pizza formPizza, BindingResult bindingResult, Model model) {
-		if (bindingResult.hasErrors())
-			return "create";
+	public String store(@ModelAttribute("ingredienti") Ingredienti formIngrediente, Model model) {
 
-		pizzaRepo.save(formPizza);
+		ingredientiRepo.save(formIngrediente);
+
 		return "redirect:/";
 	}
 
 	@GetMapping("/edit/{id}")
 	public String edit(@PathVariable("id") Integer id, Model model) {
-		Pizza pizza = pizzaRepo.getReferenceById(id);
-		model.addAttribute("pizza", pizza);
-		List<Ingredienti> ingredienti = ingredientiRepo.findAll(Sort.by("name"));
+		Ingredienti ingredienti = ingredientiRepo.getReferenceById(id);
 		model.addAttribute("ingredienti", ingredienti);
-		return "edit";
+
+		return "ingredienti-edit";
 	}
 
 	@PostMapping("/edit/{id}")
-	public String update(@Valid @ModelAttribute Pizza formPizza, BindingResult bindingResult, Model model) {
+	public String update(@Valid @ModelAttribute("ingredienti") Ingredienti formIngredienti, BindingResult bindingResult,
+			Model model) {
 
-		if (bindingResult.hasErrors())
-			return "edit";
-
-		pizzaRepo.save(formPizza);
+		ingredientiRepo.save(formIngredienti);
 
 		return "redirect:/";
 	}
 
 	@PostMapping("/delete/{id}")
 	public String delete(@PathVariable("id") Integer id) {
-
-		pizzaRepo.deleteById(id);
-
-		return "redirect:/";
+		ingredientiRepo.deleteById(id);
+		return "redirect:/ingredienti";
 	}
 }

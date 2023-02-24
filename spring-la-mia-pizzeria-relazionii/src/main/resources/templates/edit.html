@@ -24,6 +24,10 @@
 		<label for="price" class="form-label">Prezzo</label>
 		<input type="number" min="0" max="60" class="form-control" id="price" th:field="*{price}">
 
+		<div th:each="ing : ${ingredienti}">
+			<input type="checkbox" th:value="${ing.id}" th:field="*{ingredienti}"> <label th:text="${ing.name}"></label>
+		</div>
+
 		<button class="mt-1" type="submit">Salva</button>
 	</form>
 	<a class="btn btn-secondary m-2" th:href="@{/}" th:classAppend="${pagina=='index'}? active : not-active"> Elimina
