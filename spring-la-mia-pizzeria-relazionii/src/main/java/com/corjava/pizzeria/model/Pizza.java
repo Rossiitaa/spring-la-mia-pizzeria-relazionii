@@ -1,9 +1,12 @@
 package com.corjava.pizzeria.model;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
@@ -38,6 +41,17 @@ public class Pizza {
 	@DecimalMax("60.00")
 
 	private int price;
+
+	@OneToMany(mappedBy = "pizza")
+	private List<Offerta> offerte;
+
+	public List<Offerta> getOfferte() {
+		return offerte;
+	}
+
+	public void setOfferte(List<Offerta> offerte) {
+		this.offerte = offerte;
+	}
 
 	public Integer getId() {
 		return id;
